@@ -42,7 +42,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		throw new UsernameNotFoundException("User not found with the name " + username);
 	}
 
-	public User save(UserDTO user) {
+	public void save(UserDTO user) {
 
 		User newUser = new User();
 		newUser.setEmail(user.getEmail());
@@ -73,9 +73,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 		newUser.setVehiclePicture(user.getVehiclePicture());
 		newUser.setVehicleOwnerPaperPicture(user.getVehicleOwnerPaperPicture());
+
+		System.out.println(newUser);
+
+		userDao.save(newUser);
 		emailService.sendEmail("SignUp", "Registration Successful", user.getEmail());
 
-		return userDao.save(newUser);
 	}
 
 }
