@@ -22,6 +22,7 @@ import com.rohit.dto.UserDTO;
 import com.rohit.helper.Message;
 import com.rohit.model.User;
 import com.rohit.repository.UserRepository;
+import com.rohit.services.UserService;
 
 @CrossOrigin
 @RestController
@@ -38,6 +39,9 @@ public class AuthenticationController {
 
 	@Autowired
 	private JwtUtil jwtUtil;
+
+	@Autowired
+	private UserService userService;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest)
@@ -61,9 +65,9 @@ public class AuthenticationController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ResponseEntity<?> saveUser(UserDTO user) throws Exception {
+	public ResponseEntity<Message> saveUser(UserDTO user) throws Exception {
 
-		userDetailsService.save(user);
+		userService.save(user);
 		return ResponseEntity.status(HttpStatus.OK).body(new Message("Registered Successfully", "success"));
 	}
 }
