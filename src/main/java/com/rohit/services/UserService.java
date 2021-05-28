@@ -18,42 +18,42 @@ public class UserService {
 	@Autowired
 	private EmailService emailService;
 
-	public void save(UserDTO user) {
+	public void save(UserDTO userData) {
 
 		User newUser = new User();
-		newUser.setEmail(user.getEmail());
-		newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-		newUser.setName(user.getName());
-		newUser.setAddress(user.getAddress());
-		newUser.setAadharNumber(user.getAadharNumber());
-		newUser.setAadharCardPicture(user.getAadharCardPicture());
-		newUser.setDrivingLicenceNumber(user.getDrivingLicenceNumber());
-		newUser.setGovtIdCardPicture(user.getGovtIdCardPicture());
+		newUser.setEmail(userData.getEmail());
+		newUser.setPassword(bcryptEncoder.encode(userData.getPassword()));
+		newUser.setName(userData.getName());
+		newUser.setAddress(userData.getAddress());
+		newUser.setAadharNumber(userData.getAadharNumber());
+		newUser.setAadharCardPicture(userData.getAadharCardPicture());
+		newUser.setDrivingLicenceNumber(userData.getDrivingLicenceNumber());
+		newUser.setGovtIdCardPicture(userData.getGovtIdCardPicture());
 
-		newUser.setPhone(user.getPhone());
+		newUser.setPhone(userData.getPhone());
 
-		newUser.setSelfPicture(user.getSelfPicture());
+		newUser.setSelfPicture(userData.getSelfPicture());
 
-		newUser.setRole(user.getRole());
+		newUser.setRole(userData.getRole());
 
-		if (user.getRole().equals("ROLE_POLICE")) {
+		if (userData.getRole().equals("ROLE_POLICE")) {
 			System.out.println("Inside if");
 			newUser.setStatus("FREE");
-		} else if (user.getRole().equals("ROLE_AMBULANCE")) {
+		} else if (userData.getRole().equals("ROLE_AMBULANCE")) {
 			System.out.println("Inside else if");
 			newUser.setStatus("FREE");
 		} else {
 			System.out.println("Inside else");
-			newUser.setStatus(user.getStatus());
+			newUser.setStatus(userData.getStatus());
 		}
 
-		newUser.setVehiclePicture(user.getVehiclePicture());
-		newUser.setVehicleOwnerPaperPicture(user.getVehicleOwnerPaperPicture());
+		newUser.setVehiclePicture(userData.getVehiclePicture());
+		newUser.setVehicleOwnerPaperPicture(userData.getVehicleOwnerPaperPicture());
 
 		System.out.println(newUser);
 
 		userRepository.save(newUser);
-		emailService.sendEmail("SignUp", "Registration Successful", user.getEmail());
+		emailService.sendEmail("SignUp", "Registration Successful", userData.getEmail());
 
 	}
 
