@@ -79,4 +79,9 @@ public class CentralRoomController {
 	public User getTrafficPoliceById(@PathVariable("id") long id) {
 		return centralRoomService.getTrafficPoliceById(id);
 	}
+
+	@GetMapping("/search-traffic-violator/{name}")
+	public List<TrafficViolator> searchTrafficViolator(@PathVariable("name") String name) {
+		return centralRoomService.searchTrafficViolators(name);
+	}
 }

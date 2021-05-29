@@ -34,6 +34,6 @@ public interface TrafficViolatorRepository extends JpaRepository<TrafficViolator
 
 	List<TrafficViolator> findByRegistrationNumber(String registrationNumber);
 
-	List<TrafficViolator> findByNameContaining(String regEx);
+	List<TrafficViolator> findByNameStartingWith(String name);
 
 }

@@ -109,4 +109,9 @@ public class CentralRoomServices {
 		}
 	}
 
+	public List<TrafficViolator> searchTrafficViolators(String name) {
+		List<TrafficViolator> byNameContaining = trafficViolatorRepository.findByNameStartingWith(name);
+		return byNameContaining;
+	}
+
 }
