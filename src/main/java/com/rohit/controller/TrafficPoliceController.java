@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.rohit.dto.MedicalEmergencyDto;
 import com.rohit.dto.SosRequestDto;
@@ -40,10 +38,9 @@ public class TrafficPoliceController {
 	}
 
 	@PostMapping("/register-traffic-violator")
-	public ResponseEntity<Message> registerTrafficViolator(TrafficViolatorDto trafficViolatorDto,
-			@RequestParam("vehiclePhoto") MultipartFile vehicleImage, Principal principal) {
+	public ResponseEntity<Message> registerTrafficViolator(TrafficViolatorDto trafficViolatorDto, Principal principal) {
 
-		if (trafficPoliceServices.saveTrafficViolator(trafficViolatorDto, principal.getName(), vehicleImage)) {
+		if (trafficPoliceServices.saveTrafficViolator(trafficViolatorDto, principal.getName())) {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new Message("Traffic Violator Registered Successfully", "success"));
 		} else {

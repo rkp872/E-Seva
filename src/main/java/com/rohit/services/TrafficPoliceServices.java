@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.rohit.dto.MedicalEmergencyDto;
 import com.rohit.dto.SosRequestDto;
@@ -38,8 +37,7 @@ public class TrafficPoliceServices {
 		return trafficViolationTypesRepository.findAll();
 	}
 
-	public boolean saveTrafficViolator(TrafficViolatorDto trafficViolatorDto, String email,
-			MultipartFile vehicleImage) {
+	public boolean saveTrafficViolator(TrafficViolatorDto trafficViolatorDto, String email) {
 		try {
 			User user = userRepository.findByEmail(email);
 
@@ -54,7 +52,7 @@ public class TrafficPoliceServices {
 			trafficViolator.setDrivingLicence(trafficViolatorDto.getDrivingLicence());
 			trafficViolator.setRegistrationNumber(trafficViolatorDto.getRegistrationNumber());
 			trafficViolator.setVehicleType(trafficViolatorDto.getVehicleType());
-			trafficViolator.setVehiclePicture(vehicleImage.getOriginalFilename());
+			trafficViolator.setVehiclePicture(trafficViolatorDto.getVehiclePicture());
 			trafficViolator.setLocation(trafficViolatorDto.getLocation());
 			trafficViolator.setRepeatedOffender(
 					trafficViolatorRepository.existTrafficViolator(trafficViolatorDto.getRegistrationNumber()));
@@ -62,8 +60,6 @@ public class TrafficPoliceServices {
 			trafficViolator.setOtherInfo(trafficViolatorDto.getOtherInfo());
 			trafficViolator.setRegisteredBy(user);
 			trafficViolator.setPaymentStatus("Pending");
-
-			// saving image
 
 			trafficViolatorRepository.save(trafficViolator);
 			return true;
