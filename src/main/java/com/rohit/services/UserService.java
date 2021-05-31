@@ -5,7 +5,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.rohit.dto.UserDTO;
+import com.rohit.helper.RandomStringGenerator;
+import com.rohit.model.PasswordReset;
 import com.rohit.model.User;
+import com.rohit.repository.ResetPasswordRepository;
 import com.rohit.repository.UserRepository;
 
 @Service
@@ -17,6 +20,9 @@ public class UserService {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private ResetPasswordRepository resetPasswordRepository;
 
 	public void save(UserDTO userData) {
 
@@ -55,6 +61,42 @@ public class UserService {
 		userRepository.save(newUser);
 		emailService.sendEmail("SignUp", "Registration Successful", userData.getEmail());
 
+	}
+
+	public boolean forgotPassword(String email) {
+		User user = userRepository.findByEmail(email);
+		if (user != null) {
+			String token = RandomStringGenerator.getAlphaNumericString(8);
+			System.out.println("Token : " + token);
+			String url = "https://e-seva.herokuapp.com/reset/".concat(token);
+			System.out.println("Url : " + url);
+
+			PasswordReset passwordReset = new PasswordReset();
+			passwordReset.setUser(user);
+			passwordReset.setToken(token);
+
+			resetPasswordRepository.save(passwordReset);
+
+			emailService.sendEmail("Forgot Password", "Click " + url + " to reset your password", email);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean resetPassword(String newPassword, String token) {
+		PasswordReset passwordReset = resetPasswordRepository.findByToken(token);
+		if (passwordReset != null) {
+			User user = passwordReset.getUser();
+			System.out.println(user);
+			user.setPassword(bcryptEncoder.encode(newPassword));
+			userRepository.save(user);
+			resetPasswordRepository.delete(passwordReset);
+			emailService.sendEmail("Reset Password", "Your password has been updated successfully", user.getEmail());
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

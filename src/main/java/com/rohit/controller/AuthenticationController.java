@@ -9,6 +9,8 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -69,5 +71,28 @@ public class AuthenticationController {
 
 		userService.save(user);
 		return ResponseEntity.status(HttpStatus.OK).body(new Message("Registered Successfully", "success"));
+	}
+
+	@PostMapping("/forgot")
+	public ResponseEntity<Message> forgotPassword(String email) {
+		if (userService.forgotPassword(email)) {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new Message("Check your mail to reset your password", "success"));
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new Message("Email entered is not found", "danger"));
+		}
+	}
+
+	@PostMapping("/reset/{token}")
+	public ResponseEntity<Message> resetPassword(String password, @PathVariable("token") String token) {
+		System.out.println("Token : " + token);
+		System.out.println("Password  : " + password);
+		if (userService.resetPassword(password, token)) {
+			return ResponseEntity.status(HttpStatus.OK).body(new Message("Passord updated successfully", "success"));
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new Message("Link is expired, Try again !!", "danger"));
+		}
 	}
 }
