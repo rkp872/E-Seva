@@ -68,7 +68,7 @@ public class UserService {
 		if (user != null) {
 			String token = RandomStringGenerator.getAlphaNumericString(8);
 			System.out.println("Token : " + token);
-			String url = "https://e-seva.herokuapp.com/reset/".concat(token);
+			String url = "http://localhost:3000/reset/".concat(token);
 			System.out.println("Url : " + url);
 
 			PasswordReset passwordReset = new PasswordReset();
