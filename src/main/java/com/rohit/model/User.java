@@ -40,5 +40,6 @@ public class User {
 	private String vehicleOwnerPaperPicture;
 
 	private String vehiclePicture;
+	private boolean isVerified;
 
 }

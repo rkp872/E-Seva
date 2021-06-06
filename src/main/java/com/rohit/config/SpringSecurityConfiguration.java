@@ -47,9 +47,10 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().authorizeRequests().antMatchers("/traffic-police/**").hasRole("POLICE")
 				.antMatchers("/common-people/**").hasRole("COMMON").antMatchers("/central-room/**").hasRole("CENTRAL")
 				.antMatchers("/ambulance-service/**").hasRole("AMBULANCE").antMatchers("/medical-team/**")
-				.hasRole("MEDICAL").antMatchers("/login", "/register", "/forgot", "/reset/**").permitAll().anyRequest()
-				.authenticated().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.hasRole("MEDICAL").antMatchers("/login", "/register", "/forgot", "/reset/**", "/verify/**").permitAll()
+				.anyRequest().authenticated().and().exceptionHandling()
+				.authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.addFilterBefore(customJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 		http.cors();

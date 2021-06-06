@@ -9,6 +9,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,15 +63,33 @@ public class AuthenticationController {
 		String token = jwtUtil.generateToken(userdetails);
 		User user = userRepository.findByEmail(authenticationRequest.getEmail());
 
+		if (user.isVerified()) {
+			return ResponseEntity.ok(new AuthenticationResponse(token, user));
+		} else {
+			return ResponseEntity.status(HttpStatus.LOCKED)
+					.body(new Message("Your account is not verified yet", "danger"));
+		}
+
 		// return ResponseEntity.ok(new AuthenticationResponse(token, user.getRole()));
-		return ResponseEntity.ok(new AuthenticationResponse(token, user));
+
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ResponseEntity<Message> saveUser(UserDTO user) throws Exception {
 
 		userService.save(user);
-		return ResponseEntity.status(HttpStatus.OK).body(new Message("Registered Successfully", "success"));
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new Message("Registered Successfully, Check your mail to verify your account", "success"));
+	}
+
+	@GetMapping("/verify/{token}")
+	public ResponseEntity<Message> verifyUser(@PathVariable("token") String token) {
+		if (userService.verifyUser(token)) {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new Message("Successfully verified! Login Now", "success"));
+		} else {
+			return ResponseEntity.status(HttpStatus.OK).body(new Message("Invalid Link Try Again!!", "danger"));
+		}
 	}
 
 	@PostMapping("/forgot")

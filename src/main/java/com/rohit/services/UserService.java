@@ -8,8 +8,10 @@ import com.rohit.dto.UserDTO;
 import com.rohit.helper.RandomStringGenerator;
 import com.rohit.model.PasswordReset;
 import com.rohit.model.User;
+import com.rohit.model.UserVerification;
 import com.rohit.repository.ResetPasswordRepository;
 import com.rohit.repository.UserRepository;
+import com.rohit.repository.UserVerificationRepository;
 
 @Service
 public class UserService {
@@ -23,6 +25,9 @@ public class UserService {
 
 	@Autowired
 	private ResetPasswordRepository resetPasswordRepository;
+
+	@Autowired
+	private UserVerificationRepository userVerificationRepository;
 
 	public void save(UserDTO userData) {
 
@@ -59,8 +64,33 @@ public class UserService {
 		System.out.println(newUser);
 
 		userRepository.save(newUser);
-		emailService.sendEmail("SignUp", "Registration Successful", userData.getEmail());
 
+		String token = RandomStringGenerator.getAlphaNumericString(8);
+		System.out.println("Token : " + token);
+		String url = "http://localhost:3000/verify/".concat(token);
+		System.out.println("Url : " + url);
+
+		UserVerification userVerification = new UserVerification();
+		userVerification.setToken(token);
+		userVerification.setUser(newUser);
+
+		userVerificationRepository.save(userVerification);
+		emailService.sendEmail("Account Verification", "Please verify your account by clicking  " + url,
+				newUser.getEmail());
+
+	}
+
+	public boolean verifyUser(String token) {
+		UserVerification userVerification = userVerificationRepository.findByToken(token);
+		if (userVerification != null) {
+			User user = userVerification.getUser();
+			user.setVerified(true);
+			userVerificationRepository.delete(userVerification);
+			userRepository.save(user);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean forgotPassword(String email) {
