@@ -67,7 +67,7 @@ public class UserService {
 
 		String token = RandomStringGenerator.getAlphaNumericString(8);
 		System.out.println("Token : " + token);
-		String url = "http://localhost:3000/verify/".concat(token);
+		String url = "https://e-seva-gov.netlify.app/verify/".concat(token);
 		System.out.println("Url : " + url);
 
 		UserVerification userVerification = new UserVerification();
@@ -98,7 +98,7 @@ public class UserService {
 		if (user != null) {
 			String token = RandomStringGenerator.getAlphaNumericString(8);
 			System.out.println("Token : " + token);
-			String url = "http://localhost:3000/reset/".concat(token);
+			String url = "https://e-seva-gov.netlify.app/reset/".concat(token);
 			System.out.println("Url : " + url);
 
 			PasswordReset passwordReset = new PasswordReset();
