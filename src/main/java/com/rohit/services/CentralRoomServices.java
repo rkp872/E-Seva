@@ -54,7 +54,7 @@ public class CentralRoomServices {
 		}
 		if (filter.equals("Assigned")) {
 			List<SosRequest> assignedStatusSosRequests = sosRequestRepository.getAssignedStatusSosRequests();
-			System.out.println(assignedStatusSosRequests);
+
 			return assignedStatusSosRequests;
 		}
 

@@ -46,13 +46,13 @@ public class CentralRoomController {
 
 	@GetMapping("/fine-list/{filter}")
 	public List<TrafficViolator> getPendingFineList(@PathVariable("filter") String filter) {
-		System.out.println("Filelist controller");
+
 		return centralRoomService.getFineList(filter);
 	}
 
 	@GetMapping("/help-request-list/{filter}")
 	public List<SosRequest> getAllHelpRequests(@PathVariable("filter") String filter) {
-		System.out.println("Inside sos controillet : " + filter);
+
 		return centralRoomService.getSosRequestList(filter);
 	}
 

@@ -44,7 +44,6 @@ public class JwtUtil {
 
 		Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
 
-		System.out.println("INSIDE JWT UTILS" + roles);
 		if (roles.contains(new SimpleGrantedAuthority("ROLE_POLICE"))) {
 			claims.put("isPolice", true);
 		}

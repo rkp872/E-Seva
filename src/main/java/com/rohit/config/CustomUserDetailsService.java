@@ -25,9 +25,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 		User user = userDao.findByEmail(username);
 		if (user != null) {
-			System.out.println(user.getRole());
+
 			roles = Arrays.asList(new SimpleGrantedAuthority(user.getRole()));
-			System.out.println(roles);
+
 			return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), roles);
 		}
 		throw new UsernameNotFoundException("User not found with the name " + username);
