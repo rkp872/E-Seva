@@ -30,9 +30,9 @@ public class CommonPeopleController {
 
 	private final CommonPeopleServices commonPeopleServices;
 
-	@GetMapping("/my-offense")
-	public List<TrafficViolator> searchByEmail(Principal principal) {
-		return commonPeopleServices.searchTrafficViolationByEmail(principal.getName());
+	@GetMapping("/my-offense/{filter}")
+	public List<TrafficViolator> searchByEmail(@PathVariable("filter") String filter, Principal principal) {
+		return commonPeopleServices.getOwnTrafficViolation(principal.getName(), filter);
 	}
 
 	@PostMapping("/traffic-violator-by-email")
@@ -76,5 +76,10 @@ public class CommonPeopleController {
 					.body(new Message("Medical Emergency Registration Failed Try Again !!", "danger"));
 		}
 
+	}
+
+	@PostMapping("/payment-receipt-data")
+	public TransactionDetails getPaymentReceiptData(@RequestParam("email") String email) {
+		return commonPeopleServices.getPaymentReceipt(email);
 	}
 }

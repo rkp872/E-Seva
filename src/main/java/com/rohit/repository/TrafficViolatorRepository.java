@@ -30,10 +30,19 @@ public interface TrafficViolatorRepository extends JpaRepository<TrafficViolator
 
 	List<TrafficViolator> findByEmail(String email);
 
+	@Query("select tv from TrafficViolator tv where tv.email = :email and tv.paymentStatus='Pending'")
+	List<TrafficViolator> getMyPendingOffence(@Param("email") String email);
+
+	@Query("select tv from TrafficViolator tv where tv.email = :email and tv.paymentStatus='Paid'")
+	List<TrafficViolator> getMyPaidOffence(@Param("email") String email);
+
 	List<TrafficViolator> findByDrivingLicence(String drivingLicence);
 
 	List<TrafficViolator> findByRegistrationNumber(String registrationNumber);
 
 	List<TrafficViolator> findByNameStartingWith(String name);
+
+	@Query("select tv from TrafficViolator tv where tv.email = :email ")
+	TrafficViolator getTrafficViolatorByEmail(@Param("email") String email);
 
 }

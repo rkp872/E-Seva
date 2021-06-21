@@ -27,6 +27,17 @@ public class CommonPeopleServices {
 	private final PriorityRepository priorityRepository;
 	private final MedicalEmergencyRepository medicalEmergencyRepository;
 
+	public List<TrafficViolator> getOwnTrafficViolation(String email, String filter) {
+		if (filter.equals("All"))
+			return trafficViolatorRepository.findByEmail(email);
+		if (filter.equals("Pending"))
+			return trafficViolatorRepository.getMyPendingOffence(email);
+		if (filter.equals("Paid"))
+			return trafficViolatorRepository.getMyPaidOffence(email);
+		else
+			return null;
+	}
+
 	public List<TrafficViolator> searchTrafficViolationByEmail(String email) {
 		return trafficViolatorRepository.findByEmail(email);
 	}
@@ -52,7 +63,11 @@ public class CommonPeopleServices {
 			transactionDetails.setDateTime(LocalDateTime.now());
 			String hashInp = trafficViolator.getName() + trafficViolator.getTrafficViolationTypes().getOffence()
 					+ user.getName();
-			transactionDetails.setTransactionId(hashInp.hashCode());
+
+			long trId = hashInp.hashCode();
+			if (trId < 0)
+				trId = -trId;
+			transactionDetails.setTransactionId(trId);
 
 			transactionDetailsRepository.save(transactionDetails);
 
@@ -87,5 +102,10 @@ public class CommonPeopleServices {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public TransactionDetails getPaymentReceipt(String email) {
+		TrafficViolator trafficViolator = trafficViolatorRepository.getTrafficViolatorByEmail(email);
+		return transactionDetailsRepository.getByTrafficViolator(trafficViolator.getEmail());
 	}
 }
