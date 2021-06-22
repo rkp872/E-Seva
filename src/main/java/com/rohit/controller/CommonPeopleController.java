@@ -52,12 +52,9 @@ public class CommonPeopleController {
 	}
 
 	@PostMapping("/fine-payment")
-	public ResponseEntity<Message> finePayment(@RequestParam("violatorid") long violatorId, Principal principal) {
-		if (commonPeopleServices.finePaymet(principal.getName(), violatorId)) {
-			return ResponseEntity.status(HttpStatus.OK).body(new Message("Payment Successful !!", "success"));
-		} else {
-			return ResponseEntity.status(HttpStatus.OK).body(new Message("Payment Failed Try Again !!", "danger"));
-		}
+	public TransactionDetails finePayment(@RequestParam("violatorid") long violatorId, Principal principal) {
+		return commonPeopleServices.finePaymet(principal.getName(), violatorId);
+
 	}
 
 	@GetMapping("/track-payment/{transactionId}")
@@ -78,8 +75,4 @@ public class CommonPeopleController {
 
 	}
 
-	@PostMapping("/payment-receipt-data")
-	public TransactionDetails getPaymentReceiptData(@RequestParam("email") String email) {
-		return commonPeopleServices.getPaymentReceipt(email);
-	}
 }

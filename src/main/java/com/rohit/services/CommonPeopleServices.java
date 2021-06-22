@@ -50,32 +50,27 @@ public class CommonPeopleServices {
 		return trafficViolatorRepository.findByRegistrationNumber(regNumber);
 	}
 
-	public boolean finePaymet(String email, long violatorId) {
+	public TransactionDetails finePaymet(String email, long violatorId) {
 
-		try {
-			User user = userRepository.findByEmail(email);
-			TrafficViolator trafficViolator = trafficViolatorRepository.findById(violatorId).get();
-			trafficViolator.setPaymentStatus("Paid");
-			trafficViolatorRepository.save(trafficViolator);
-			TransactionDetails transactionDetails = new TransactionDetails();
-			transactionDetails.setPaidBy(user);
-			transactionDetails.setViolator(trafficViolator);
-			transactionDetails.setDateTime(LocalDateTime.now());
-			String hashInp = trafficViolator.getName() + trafficViolator.getTrafficViolationTypes().getOffence()
-					+ user.getName();
+		User user = userRepository.findByEmail(email);
+		TrafficViolator trafficViolator = trafficViolatorRepository.findById(violatorId).get();
+		trafficViolator.setPaymentStatus("Paid");
+		trafficViolatorRepository.save(trafficViolator);
+		TransactionDetails transactionDetails = new TransactionDetails();
+		transactionDetails.setPaidBy(user);
+		transactionDetails.setViolator(trafficViolator);
+		transactionDetails.setDateTime(LocalDateTime.now());
+		String hashInp = trafficViolator.getName() + trafficViolator.getTrafficViolationTypes().getOffence()
+				+ user.getName();
 
-			long trId = hashInp.hashCode();
-			if (trId < 0)
-				trId = -trId;
-			transactionDetails.setTransactionId(trId);
+		long trId = hashInp.hashCode();
+		if (trId < 0)
+			trId = -trId;
+		transactionDetails.setTransactionId(trId);
 
-			transactionDetailsRepository.save(transactionDetails);
+		transactionDetailsRepository.save(transactionDetails);
 
-			return true;
-
-		} catch (Exception e) {
-			return false;
-		}
+		return transactionDetails;
 
 	}
 
@@ -104,8 +99,4 @@ public class CommonPeopleServices {
 		}
 	}
 
-	public TransactionDetails getPaymentReceipt(String email) {
-		TrafficViolator trafficViolator = trafficViolatorRepository.getTrafficViolatorByEmail(email);
-		return transactionDetailsRepository.getByTrafficViolator(trafficViolator.getEmail());
-	}
 }
